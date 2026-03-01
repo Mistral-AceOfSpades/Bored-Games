@@ -633,7 +633,13 @@ This repository now includes a `game-tutor/` scaffold and a Python orchestrator 
 You can generate tutorial + strategy artifacts from a rules text file with:
 
 ```bash
-uv run python -m vibe.game_tutor game-tutor/rules/chess_rules.txt --output game-tutor
+uv run python -m vibe.game_tutor generate game-tutor/rules/chess_rules.txt --output game-tutor
+```
+
+You can also run a local upload UI that stores all generated sessions on disk:
+
+```bash
+uv run python -m vibe.game_tutor serve --host 127.0.0.1 --port 8765 --storage game-tutor/generated
 ```
 
 The orchestrator pipeline includes:
@@ -643,3 +649,4 @@ The orchestrator pipeline includes:
 - Interactive builder agent
 
 Generated output includes tutorial JSON, strategy JSON, a starter React component, and a manifest.
+The upload UI writes files under `game-tutor/generated/` so you can revisit and practice generated sessions locally.

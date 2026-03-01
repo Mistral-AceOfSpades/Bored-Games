@@ -372,7 +372,10 @@ class MistralVibeOrchestrator:
 
     def run(self, rules_path: Path, output_root: Path) -> dict[str, object]:
         raw_rules = rules_path.read_text(encoding="utf-8")
-        parsed = self.rule_parser.parse(raw_rules, source_name=rules_path.name)
+        return self.run_from_text(raw_rules, rules_path.name, output_root)
+
+    def run_from_text(self, rules_text: str, source_name: str, output_root: Path) -> dict[str, object]:
+        parsed = self.rule_parser.parse(rules_text, source_name=source_name)
         tutorials = self.tutorial_generator.generate(parsed)
         strategies = self.strategy_engine.generate(parsed, tutorials)
         ui_files = self.interactive_builder.build(tutorials, strategies)
@@ -392,14 +395,15 @@ class MistralVibeOrchestrator:
         )
 
         for ui_file in ui_files:
-            ui_path = output_root / Path(ui_file.file_path).name
+            ui_path = ui_dir / Path(ui_file.file_path).name
             ui_path.write_text(ui_file.source, encoding="utf-8")
 
         manifest = {
             "parsed_rules": parsed.model_dump(mode="json"),
             "tutorial_output": str(tutorials_dir),
             "strategy_output": str(strategies_dir),
-            "ui_files": [file.file_path for file in ui_files],
+            "ui_output": str(ui_dir),
+            "ui_files": [str(ui_dir / Path(file.file_path).name) for file in ui_files],
         }
         (output_root / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
         return manifest

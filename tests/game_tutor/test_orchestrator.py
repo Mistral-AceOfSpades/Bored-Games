@@ -18,15 +18,16 @@ def test_orchestrator_generates_artifacts(tmp_path: Path) -> None:
     assert manifest["parsed_rules"]["game_name"] == "Chess"
     assert (output / "tutorials" / "chess.json").exists()
     assert (output / "strategies" / "chess.json").exists()
-    assert (output / "GameTutorApp.tsx").exists()
+    assert (output / "ui" / "GameTutorApp.tsx").exists()
     assert (output / "manifest.json").exists()
 
 
 def test_orchestrator_mahjong_detection(tmp_path: Path) -> None:
-    rules = tmp_path / "custom.txt"
-    rules.write_text("Players may call pon and chii before declaring riichi.", encoding="utf-8")
-
     output = tmp_path / "out"
-    manifest = MistralVibeOrchestrator().run(rules, output)
+    manifest = MistralVibeOrchestrator().run_from_text(
+        "Players may call pon and chii before declaring riichi.",
+        "custom.txt",
+        output,
+    )
 
     assert manifest["parsed_rules"]["game_name"] == "Riichi Mahjong"
