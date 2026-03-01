@@ -625,3 +625,28 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the [LICENSE](LICENSE) file for the full license text.
+
+## Game Tutor Orchestrator (example project scaffold)
+
+This repository now includes a `game-tutor/` scaffold and a Python orchestrator module at `vibe/game_tutor/`.
+
+You can generate tutorial + strategy artifacts from a rules text file with:
+
+```bash
+uv run python -m vibe.game_tutor generate game-tutor/rules/chess_rules.txt --output game-tutor
+```
+
+You can also run a local upload UI that stores all generated sessions on disk:
+
+```bash
+uv run python -m vibe.game_tutor serve --host 127.0.0.1 --port 8765 --storage game-tutor/generated
+```
+
+The orchestrator pipeline includes:
+- Rule parser agent
+- Tutorial generator agent
+- Strategy engine agent
+- Interactive builder agent
+
+Generated output includes tutorial JSON, strategy JSON, a starter React component, and a manifest.
+The upload UI writes files under `game-tutor/generated/` so you can revisit and practice generated sessions locally.
